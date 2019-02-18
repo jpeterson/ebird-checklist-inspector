@@ -16,7 +16,9 @@ function FileInfo({ recordCount }) {
 
   return (
     <div>
-      <CalciteP>Found {recordCount} checklists.</CalciteP>
+      <CalciteP>
+        Found {recordCount} <em>unique</em> checklists.
+      </CalciteP>
     </div>
   );
 }

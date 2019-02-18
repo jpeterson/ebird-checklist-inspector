@@ -20,13 +20,18 @@ export default class ChecklistTable extends Component {
   getRow = item => {
     const { subId, reasonCodeLatest, userDisplayName } = item;
 
-    if (this.state.hideVisibleChecklists && !reasonCodeLatest) {
+    let isHidden = false;
+    if (reasonCodeLatest && reasonCodeLatest === 'obshide') {
+      isHidden = true;
+    }
+
+    if (this.state.hideVisibleChecklists && !isHidden) {
       return null;
     }
 
-    let isHidden = <Label green>visible</Label>;
-    if (reasonCodeLatest && reasonCodeLatest === 'obshide') {
-      isHidden = <Label red>hidden</Label>;
+    let isHiddenElement = <Label green>visible</Label>;
+    if (isHidden) {
+      isHiddenElement = <Label red>hidden</Label>;
     }
 
     const idHref = `https://ebird.org/view/checklist/${subId}`;
@@ -37,9 +42,9 @@ export default class ChecklistTable extends Component {
     );
 
     return (
-      <TableRow key={subId}>
+      <TableRow key={`${subId}`}>
         <TableCell>{idLink}</TableCell>
-        <TableCell>{isHidden}</TableCell>
+        <TableCell>{isHiddenElement}</TableCell>
         <TableCell>{userDisplayName}</TableCell>
       </TableRow>
     );
@@ -55,7 +60,10 @@ export default class ChecklistTable extends Component {
       <div style={{ marginTop: '50px' }}>
         <CalciteH1>
           Checklist Statuses
-          <Switch onChange={this.toggleVisibleChecklists}>
+          <Switch
+            value={this.state.hideVisibleChecklists}
+            onChange={this.toggleVisibleChecklists}
+          >
             Hide Visible Checklists
           </Switch>
         </CalciteH1>

@@ -1,5 +1,6 @@
 import { get, all } from 'axios';
 import { parse } from 'papaparse';
+import { uniqBy } from 'lodash';
 
 export async function getChecklistStatuses(ids) {
   const responses = await all(ids.map(id => getRequest(id)));
@@ -21,7 +22,8 @@ export function parseCsv(file) {
     parse(file, {
       header: true,
       complete: results => {
-        resolve(results.data);
+        const data = uniqBy(results.data, 'Submission ID');
+        resolve(data);
       }
     });
   });
